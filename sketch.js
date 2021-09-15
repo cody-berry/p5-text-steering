@@ -45,6 +45,7 @@ function draw() {
   background(0, 0, 50);
   for (let i = 0; i < vehicles.length; i++) {
     let vh = vehicles[i]
+    vh.update()
     vh.show()
   }
 }
