@@ -24,3 +24,8 @@ Vehicle.prototype.update = function(){
 }
 
 
+Vehicle.prototype.applyForce = function(f){
+    // F = a/m, but m = 1 so a = F
+    this.acc.add(f)
+}
+

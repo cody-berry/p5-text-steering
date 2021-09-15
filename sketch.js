@@ -4,7 +4,7 @@ version comments
 . load a font, use text
 . font.textToPoints » display all points
 . vehicle with: pos, vel, acc, r, maxspeed, maxforce, target
-  vehicle.update,
+. vehicle.update,
   vehicle.applyforce
   vehicle.seek, flee » behaviors
   vehicle.arrive
@@ -43,8 +43,10 @@ function setup() {
 
 function draw() {
   background(0, 0, 50);
+  let gravity = new p5.Vector(0, 0.01)
   for (let i = 0; i < vehicles.length; i++) {
     let vh = vehicles[i]
+    vh.applyForce(gravity)
     vh.update()
     vh.show()
   }
