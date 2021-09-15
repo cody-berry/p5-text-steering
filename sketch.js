@@ -2,9 +2,9 @@
 version comments
 . program shell: basic setup, draw. css styling
 . load a font, use text
-  font.textToPoints » display all points
-  vehicle with: pos, vel, acc, r, maxspeed, maxforce, target
-  vehicle.show, .update,
+. font.textToPoints » display all points
+. vehicle with: pos, vel, acc, r, maxspeed, maxforce, target
+  vehicle.update,
   vehicle.applyforce
   vehicle.seek, flee » behaviors
   vehicle.arrive
@@ -14,7 +14,7 @@ version comments
 
 
 let font
-let vehicles
+let vehicles = []
 
 function preload() {
   font = loadFont('fonts/Meiryo-01.ttf');
@@ -36,11 +36,15 @@ function setup() {
 
   for (let i = 0; i < points.length; i++){
     let pt = points[i]
-    point(pt.x, pt.y)
+    // point(pt.x, pt.y)
+    vehicles.push(new Vehicle(pt.x, pt.y))
   }
-
 }
 
 function draw() {
-  // background(0, 0, 50);
+  background(0, 0, 50);
+  for (let i = 0; i < vehicles.length; i++) {
+    let vh = vehicles[i]
+    vh.show()
+  }
 }
