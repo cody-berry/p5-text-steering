@@ -1,4 +1,7 @@
 /*
+@author Cody
+@date 2021.09.16
+
 version comments
 . program shell: basic setup, draw. css styling
 . load a font, use text
@@ -8,10 +11,10 @@ version comments
 . vehicle.applyforce
 . vehicle.seek, flee » behaviors
 . vehicle.arrive
-  textpoints afraid of mouse
-  play with optional parameters to textToPoints
+. textpoints afraid of mouse
+ play with optional parameters to textToPoints
+ making the vehicles rainbow
 */
-
 
 let font
 let vehicles = []
@@ -23,31 +26,22 @@ function preload() {
 function setup() {
   createCanvas(600, 300);
   colorMode(HSB, 360, 100, 100, 100);
-  background(0, 0, 50)
-  textFont(font)
-
   fill(210, 50, 100)
   stroke(210, 50, 100)
-  strokeWeight(3)
-  textSize(80)
-
-  let points = font.textToPoints("Trainbow", 10, height/2, 80)
-  // text("Trainbow", 10, height/2)
-
+  strokeWeight(5)
+  textSize(130)
+  let points = font.textToPoints('Train', 10, height/2, 130)
   for (let i = 0; i < points.length; i++){
-    let pt = points[i]
-    // point(pt.x, pt.y)
-    vehicles.push(new Vehicle(pt.x, pt.y))
+    vehicles.push(new Vehicle(points[i].x, points[i].y))
   }
 }
 
 function draw() {
   background(0, 0, 50);
-  let gravity = new p5.Vector(0, 0.01)
-  for (let i = 0; i < vehicles.length; i++) {
+  for (let i = 0; i < vehicles.length; i++){
     let vh = vehicles[i]
-    vh.update()
     vh.show()
+    vh.update()
     vh.behaviors()
   }
 }

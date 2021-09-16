@@ -1,81 +1,70 @@
 
 
-function Vehicle(x, y) {
+function Vehicle(x, y){
     this.pos = new p5.Vector(random(width), random(height))
     this.vel = p5.Vector.random2D()
-    this.acc = new p5.Vector()
-    this.r = 2
+    this.acc = new p5.Vector(0, 0)
+    this.r = 1
     this.target = new p5.Vector(x, y)
-    this.maxspeed = 5
-    this.maxforce = 0.1
-    this.seekfactor = 0.5
-    this.fleefactor = 2
+    this.maxSpeed = 4
+    this.maxForce = 0.3
 }
 
 
+// shows the vehicle
 Vehicle.prototype.show = function(){
     fill(210, 50, 100)
-    stroke(210, 50, 100)
     circle(this.pos.x, this.pos.y, this.r*2)
-
 }
 
-
+// updates the vehicle's position, velocity, and acceleration
 Vehicle.prototype.update = function(){
-    this.vel.add(this.acc)
-    this.pos.add(this.vel)
-    this.acc.mult(0)
+   this.pos.add(this.vel)
+   this.vel.add(this.acc)
+   this.acc.mult(0)
 }
 
+//applies a force to the vehicle
+Vehicle.prototype.applyForce = function(f){
+    // f = ma, and m = 1 so a = f
+    this.acc.add(f)
+}
 
+// applies the vehicle's behaviors
 Vehicle.prototype.behaviors = function(){
+    // we always want to seek our target
     let seek = this.arrive(this.target)
+    // "I'm afraid of the mouse!", says this.
     let mouse = new p5.Vector(mouseX, mouseY)
     let flee = this.flee(mouse)
+    // scaling room {
+    seek.mult(1)
+    flee.mult(3)
+    //              }
 
-    seek.mult(this.seekfactor)
-    flee.mult(this.fleefactor)
-
+    // apply our forces
     this.applyForce(seek)
     if (!mouseIsPressed){
         this.applyForce(flee)
     }
 }
 
-
+// seeks the target
 Vehicle.prototype.seek = function(target){
-    // get a vector from us to our target, the first step to getting the desired
-    // velocity
+    // get a line from us to the target, the first step of getting the
+    // desired velocity
     let desired = p5.Vector.sub(target, this.pos)
-    // we want to be traveling at our max speed
-    desired.setMag(this.maxspeed)
-    // steering force = desired_velocity - current_velocity
+    // we always want to go at our maximum speed
+    desired.setMag(this.maxSpeed)
+    // steering = desired - current
     desired.sub(this.vel)
-    // let's make sure we aren't applying too much steering force
-    return desired.limit(this.maxforce)
+    // make sure we don't apply too much force
+    return desired.limit(this.maxForce)
 }
 
-
-Vehicle.prototype.arrive = function(target) {
-    // get a vector from us to our target, the first step to getting the desired
-    // velocity
-    let desired = p5.Vector.sub(target, this.pos)
-    // we want to be traveling at our max speed except for if we're inside a
-    // certain radius, which then we want to slow down
-    let speed = this.maxspeed
-    if (desired.mag() < 50){
-        speed = map(desired.mag(), 0, 50, 0, this.maxspeed)
-    }
-    desired.setMag(speed)
-    // steering force = desired_velocity - current_velocity
-    desired.sub(this.vel)
-    // let's make sure we aren't applying too much steering force
-    return desired.limit(this.maxforce)
-}
-
-
+// flees the target
 Vehicle.prototype.flee = function(target){
-    // the .mult(-1) is very important so that we actually flee, not seek
+    // fleeing is the opposite of seeking
     if (dist(target.x, target.y, this.pos.x, this.pos.y) < 50) {
         return this.seek(target).mult(-1)
     }
@@ -84,10 +73,20 @@ Vehicle.prototype.flee = function(target){
     }
 }
 
-
-
-Vehicle.prototype.applyForce = function(f){
-    // F = a/m, but m = 1 so a = F
-    this.acc.add(f)
+// arrives at the target
+Vehicle.prototype.arrive = function(target){
+    // get a line from us to the target, the first step of getting the
+    // desired velocity
+    let desired = p5.Vector.sub(target, this.pos)
+    // we always want to go at our maximum speed, except for if we're
+    // inside a perception radius
+    let speed = this.maxSpeed
+    if (desired.mag() < 50){
+        speed = map(desired.mag(), 0, 50, 0, this.maxSpeed)
+    }
+    desired.setMag(speed)
+    // steering = desired - current
+    desired.sub(this.vel)
+    // make sure we don't apply too much force
+    return desired.limit(this.maxForce)
 }
-
