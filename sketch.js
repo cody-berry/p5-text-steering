@@ -6,7 +6,7 @@ version comments
 . vehicle with: pos, vel, acc, r, maxspeed, maxforce, target
 . vehicle.update,
 . vehicle.applyforce
-  vehicle.seek, flee » behaviors
+. vehicle.seek, flee » behaviors
   vehicle.arrive
   textpoints afraid of mouse
   play with optional parameters to textToPoints

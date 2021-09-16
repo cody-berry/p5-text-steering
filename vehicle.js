@@ -9,7 +9,7 @@ function Vehicle(x, y) {
     this.maxspeed = 5
     this.maxforce = 0.1
     this.seekfactor = 1
-    this.fleefactor = 0.1
+    this.fleefactor = 0.7
 }
 
 
@@ -28,7 +28,7 @@ Vehicle.prototype.update = function(){
 
 
 Vehicle.prototype.behaviors = function(){
-    let seek = this.seek(this.target)
+    let seek = this.arrive(this.target)
     let mouse = new p5.Vector(mouseX, mouseY)
     let flee = this.flee(mouse)
 
@@ -36,7 +36,9 @@ Vehicle.prototype.behaviors = function(){
     flee.mult(this.fleefactor)
 
     this.applyForce(seek)
-    this.applyForce(flee)
+    if (!mouseIsPressed){
+        this.applyForce(flee)
+    }
 }
 
 
@@ -46,6 +48,24 @@ Vehicle.prototype.seek = function(target){
     let desired = p5.Vector.sub(target, this.pos)
     // we want to be traveling at our max speed
     desired.setMag(this.maxspeed)
+    // steering force = desired_velocity - current_velocity
+    desired.sub(this.vel)
+    // let's make sure we aren't applying too much steering force
+    return desired.limit(this.maxforce)
+}
+
+
+Vehicle.prototype.arrive = function(target) {
+    // get a vector from us to our target, the first step to getting the desired
+    // velocity
+    let desired = p5.Vector.sub(target, this.pos)
+    // we want to be traveling at our max speed except for if we're inside a
+    // certain radius, which then we want to slow down
+    let speed = this.maxspeed
+    if (desired.mag() < 50){
+        speed = map(desired.mag(), 0, 50, 0, this.maxspeed)
+    }
+    desired.setMag(speed)
     // steering force = desired_velocity - current_velocity
     desired.sub(this.vel)
     // let's make sure we aren't applying too much steering force
