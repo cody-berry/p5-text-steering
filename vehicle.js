@@ -8,13 +8,14 @@ function Vehicle(x, y) {
     this.target = new p5.Vector(x, y)
     this.maxspeed = 5
     this.maxforce = 0.1
-    this.seekfactor = 1
-    this.fleefactor = 0.7
+    this.seekfactor = 0.5
+    this.fleefactor = 2
 }
 
 
 Vehicle.prototype.show = function(){
     fill(210, 50, 100)
+    stroke(210, 50, 100)
     circle(this.pos.x, this.pos.y, this.r*2)
 
 }
@@ -75,7 +76,12 @@ Vehicle.prototype.arrive = function(target) {
 
 Vehicle.prototype.flee = function(target){
     // the .mult(-1) is very important so that we actually flee, not seek
-    return this.seek(target).mult(-1)
+    if (dist(target.x, target.y, this.pos.x, this.pos.y) < 50) {
+        return this.seek(target).mult(-1)
+    }
+    else{
+        return new p5.Vector(0, 0)
+    }
 }
 
 

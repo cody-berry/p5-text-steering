@@ -7,7 +7,7 @@ version comments
 . vehicle.update,
 . vehicle.applyforce
 . vehicle.seek, flee » behaviors
-  vehicle.arrive
+. vehicle.arrive
   textpoints afraid of mouse
   play with optional parameters to textToPoints
 */
